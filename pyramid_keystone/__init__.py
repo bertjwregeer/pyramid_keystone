@@ -38,3 +38,6 @@ def includeme(config):
         registry.settings.update(settings)
 
     config.action('keystone-configure', register)
+
+    config.add_directive('keystone_auth_policy', '.authentication.add_auth_policy')
+
