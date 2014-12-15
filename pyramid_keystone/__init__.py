@@ -53,5 +53,6 @@ def includeme(config):
     config.add_directive('keystone_auth_policy', '.authentication.add_auth_policy')
 
     # Add the keystone property to the request
-    config.add_request_method('.keystone.request_keystone', name='keystone', property=True, reify=True)
+    config.add_request_method('.keystone.request_keystone', name='keystone',
+            property=True, reify=True)
 
