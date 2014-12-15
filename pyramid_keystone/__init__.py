@@ -26,5 +26,15 @@ def includeme(config):
 
        config = Configurator()
        config.include('pyramid_keystone')
+
     """
 
+    # We use an action so that the user can include us, and then add the
+    # required variables, upon commit we will pick up those changes.
+    def register():
+        registry = config.registry
+        settings = parse_settings(registry.settings)
+
+        registry.settings.update(settings)
+
+    config.action('keystone-configure', register)
