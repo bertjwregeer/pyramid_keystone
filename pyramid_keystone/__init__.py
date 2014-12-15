@@ -39,5 +39,9 @@ def includeme(config):
 
     config.action('keystone-configure', register)
 
+    # Allow the user to use our auth policy (recommended)
     config.add_directive('keystone_auth_policy', '.authentication.add_auth_policy')
+
+    # Add the keystone property to the request
+    config.add_request_method('.keystone.request_keystone', name='keystone', property=True, reify=True)
 
