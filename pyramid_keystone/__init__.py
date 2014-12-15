@@ -1,3 +1,5 @@
+from pyramid.exceptions import ConfigurationError
+from pyramid.interfaces import ISessionFactory
 
 default_settings = [
         ('auth_url', str, 'http://localhost:5000/v3'),
@@ -37,7 +39,15 @@ def includeme(config):
 
         registry.settings.update(settings)
 
+    def ensure():
+        if config.registry.queryUtility(ISessionFactory) is None:
+            raise ConfigurationError('pyramid_keystone requires a registered'
+                    ' session factory. (use the set_session_factory method)')
+
     config.action('keystone-configure', register)
+    # We need to make sure that this is executed after the default Pyramid
+    # actions, because otherwise our Session Factory may not exist yet
+    config.action(None, ensure, order=10)
 
     # Allow the user to use our auth policy (recommended)
     config.add_directive('keystone_auth_policy', '.authentication.add_auth_policy')
