@@ -1,6 +1,3 @@
-import os
-import posixpath
-import sys
 
 def parse_options_from_settings(settings, settings_prefix):
     """ Parse options for use with Keystone """
