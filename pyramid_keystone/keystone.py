@@ -70,6 +70,22 @@ class Keystone(object):
         except (kc_exceptions.Unauthorized, kc_exceptions.AuthorizationFailure) as e:
             return
 
+    def get_scoped_session(self, project_id):
+        try:
+            auth_token = kc_v3.TokenMethod(token=self.unscoped_token)
+
+            auth = kc_v3.Auth(auth_url=self.settings['auth_url'], auth_methods=[auth_token], project_id=project_id)
+
+            sess = kc_session.Session(auth=auth)
+
+            log.debug('Fetching scoped token')
+            scoped_token = sess.get_token()
+            log.debug('Fetched scoped token for "{}": {}'.format(scoped_token, project_id))
+
+            return sess
+        except (kc_exceptions.Unauthorized, kc_exceptions.AuthorizationFailure) as e:
+            raise ValueError('Invalid or unauthorized unscoped token')
+
     def authenticate(self, username, password):
         self._get_unscoped_session(username=username, password=password)
 
