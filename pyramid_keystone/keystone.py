@@ -11,9 +11,19 @@ from .settings import from_settings
 def request_keystone(request):
     return Keystone(request)
 
+def _kc_session_with_token(wrap):
+    def _check_if_token(self):
+        if not self._session and 'keystone_token' in self.request.session:
+            self._get_unscoped_session(token=self.request.session['keystone_token'])
+
+        if self._authed:
+            return wrap(self)
+        else:
+            log.debug('Unable to get keystone session. Returning None')
+            return None
+    return _check_if_token
+
 class Keystone(object):
-    user_id = None
-    username = None
     _authed = False
     _session = None
 
@@ -59,4 +69,14 @@ class Keystone(object):
                     del self.request.session['keystone_token']
         except (kc_exceptions.Unauthorized, kc_exceptions.AuthorizationFailure) as e:
             return
+
+    @property
+    @_kc_session_with_token
+    def username(self):
+        return self._session.auth.auth_ref['user']['name']
+
+    @property
+    @_kc_session_with_token
+    def user_id(self):
+        return self._session.auth.auth_ref['user']['id']
 
