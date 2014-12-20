@@ -109,3 +109,7 @@ class Keystone(object):
     def user_id(self):
         return self._session.auth.auth_ref['user']['id']
 
+    @property
+    @_kc_session_with_token
+    def unscoped_token(self):
+        return self._session.get_token()
