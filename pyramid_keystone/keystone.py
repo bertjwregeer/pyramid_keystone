@@ -1,4 +1,3 @@
-from keystoneclient import client
 
 from .settings import from_settings
 
