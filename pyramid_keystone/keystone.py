@@ -78,6 +78,11 @@ class Keystone(object):
 
         return True
 
+    @_kc_session_with_token
+    def revoke_all(self):
+        if 'keystone_token' in self.request.session:
+            del self.request.session['keystone_token']
+
     @property
     @_kc_session_with_token
     def username(self):
