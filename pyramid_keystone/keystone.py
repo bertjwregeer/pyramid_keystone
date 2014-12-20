@@ -70,6 +70,14 @@ class Keystone(object):
         except (kc_exceptions.Unauthorized, kc_exceptions.AuthorizationFailure) as e:
             return
 
+    def authenticate(self, username, password):
+        self._get_unscoped_session(username=username, password=password)
+
+        if not self._authed:
+            return False
+
+        return True
+
     @property
     @_kc_session_with_token
     def username(self):
