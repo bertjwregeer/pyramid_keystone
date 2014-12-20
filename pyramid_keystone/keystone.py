@@ -3,6 +3,7 @@ log = logging.getLogger(__name__)
 
 from keystoneclient import session as kc_session
 from keystoneclient.auth.identity import v3 as kc_v3
+from keystoneclient.v3 import client as kc_client
 
 from keystoneclient.openstack.common.apiclient import exceptions as kc_exceptions
 
@@ -85,6 +86,12 @@ class Keystone(object):
             return sess
         except (kc_exceptions.Unauthorized, kc_exceptions.AuthorizationFailure) as e:
             raise ValueError('Invalid or unauthorized unscoped token')
+
+    def get_projects(self):
+        ks = kc_client.Client(session=self._session)
+        projects = [project.to_dict() for project in ks.projects.list(user=self.user_id)]
+
+        return projects
 
     def authenticate(self, username, password):
         self._get_unscoped_session(username=username, password=password)
