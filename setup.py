@@ -30,7 +30,7 @@ requires = [
     ]
 
 setup(name='pyramid_keystone',
-        version='0.0.1dev',
+        version='0.0.1.dev0',
         description='OpenStack keystone bindings for Pyramid',
         long_description=README + '\n\n' + CHANGES,
         classifiers=[
