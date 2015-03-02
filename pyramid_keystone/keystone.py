@@ -87,6 +87,7 @@ class Keystone(object):
         except (kc_exceptions.Unauthorized, kc_exceptions.AuthorizationFailure) as e:
             raise ValueError('Invalid or unauthorized unscoped token')
 
+    @_kc_session_with_token
     def get_projects(self):
         ks = kc_client.Client(session=self._session)
         projects = [project.to_dict() for project in ks.projects.list(user=self.user_id)]
